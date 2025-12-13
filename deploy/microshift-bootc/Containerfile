@@ -1,0 +1,6 @@
+FROM ghcr.io/microshift-io/microshift:release-4.20-4.20.0-okd-scos.9
+
+RUN mkdir -p /usr/lib/microshift/manifests.d/002-jumpstarter
+COPY deploy/microshift-bootc/kustomization.yaml       /usr/lib/microshift/manifests.d/002-jumpstarter/kustomization.yaml
+COPY deploy/operator/dist/install.yaml                /usr/lib/microshift/manifests.d/002-jumpstarter/install-operator.yaml
+COPY deploy/microshift-bootc/config-svc/manifest.yaml /usr/lib/microshift/manifests.d/002-jumpstarter/config-svc.yaml
