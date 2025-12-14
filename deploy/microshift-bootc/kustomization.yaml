@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - install-operator.yaml
-  - config-svc.yaml
 
 # Common labels applied to all resources
 commonLabels:

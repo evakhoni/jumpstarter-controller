@@ -1,6 +1,18 @@
 FROM ghcr.io/microshift-io/microshift:release-4.20-4.20.0-okd-scos.9
 
+# Install dependencies for config-svc
+RUN dnf install -y epel-release && \
+    dnf install -y python3 iproute python3-flask python3-pip && \
+    pip3 install python-pam && \
+    dnf clean all
+
+# Install config-svc systemd service
+COPY deploy/microshift-bootc/config-svc/app.py /usr/local/bin/config-svc
+RUN chmod +x /usr/local/bin/config-svc
+COPY deploy/microshift-bootc/config-svc/config-svc.service /etc/systemd/system/config-svc.service
+RUN systemctl enable config-svc.service
+
+# Install MicroShift manifests
 RUN mkdir -p /usr/lib/microshift/manifests.d/002-jumpstarter
 COPY deploy/microshift-bootc/kustomization.yaml       /usr/lib/microshift/manifests.d/002-jumpstarter/kustomization.yaml
 COPY deploy/operator/dist/install.yaml                /usr/lib/microshift/manifests.d/002-jumpstarter/install-operator.yaml
-COPY deploy/microshift-bootc/config-svc/manifest.yaml /usr/lib/microshift/manifests.d/002-jumpstarter/config-svc.yaml
